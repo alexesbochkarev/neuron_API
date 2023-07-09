@@ -150,3 +150,4 @@ config/local.py
 
 # media files
 media/
+response.json

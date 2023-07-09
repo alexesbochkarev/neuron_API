@@ -34,7 +34,7 @@ class UserAdmin(admin.ModelAdmin):
     add_form_template = "admin/auth/user/add_form.html"
     change_user_password_template = None
     fieldsets = (
-        (None, {"fields": ("email", "password")}),
+        (None, {"fields": ("email", "password", "tariff",)}),
         (_("Personal info"), {"fields": ("tg_username", "tg_id", "avatar", "energy", "kyc", "dob", "otp", "mainkey", "location",)}),
         (
             _("Permissions"),

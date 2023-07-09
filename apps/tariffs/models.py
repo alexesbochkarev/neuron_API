@@ -22,7 +22,6 @@ class Tariff(models.Model):
     economie    = models.PositiveIntegerField(default=0)
     storage     = models.FloatField(default=0)
     status      = models.CharField('Статус', choices=Status.choices, default='Active', max_length=10)
-    users       = models.ManyToManyField(User, related_name="tariff")
     products    = models.ManyToManyField("tariffs.Products", related_name="tariffs")
 
     def __str__(self):
