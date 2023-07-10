@@ -47,7 +47,8 @@ class PostsSerialazer(serializers.ModelSerializer):
 
 
 class ProjectSerialazer(serializers.ModelSerializer):
-    posts = PostsSerialazer(many=True)
+    posts = PostsSerialazer(many=True, read_only=True)
+    results = ResultSerialazer(many=True, read_only=True)
     class Meta:
         model = Project
         exclude = ('user',)

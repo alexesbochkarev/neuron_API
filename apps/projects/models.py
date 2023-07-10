@@ -12,7 +12,7 @@ class Project(models.Model):
     name = models.CharField('Название', max_length=255)
     date = models.DateTimeField(_("date created"), default=timezone.now)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='projects')
-    results = models.ManyToManyField('core.Result', related_name="projects")
+    results = models.ManyToManyField('core.Result', related_name="projects", blank=True)
 
 
     class Meta:
@@ -43,6 +43,7 @@ class Post(models.Model):
                                    default='Scheduled',
                                    max_length=10)
     project     = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='posts')
+    user        = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
 
     class Meta:
         verbose_name        = 'Пост'

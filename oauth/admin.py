@@ -62,7 +62,7 @@ class UserAdmin(admin.ModelAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
-    list_display = ("email", "tg_username", "energy", "location")
+    list_display = ("id", "email", "tg_username", "energy", "location")
     list_filter = ("is_staff", "is_active",)
     search_fields = ("email", "tg_username", "location")
     ordering = ("email",)

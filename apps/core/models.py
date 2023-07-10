@@ -29,10 +29,10 @@ class Result(models.Model):
 
     class Meta:
         verbose_name        = 'Результат'
-        verbose_name_plural = 'Резултаты'
+        verbose_name_plural = 'Результаты'
 
     def __str__(self):
-        return self.request[:10]
+        return self.request
 
 
 class Tool(models.Model):

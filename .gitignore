@@ -151,3 +151,4 @@ config/local.py
 # media files
 media/
 response.json
+db.sqlite3
