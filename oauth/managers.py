@@ -33,16 +33,16 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         
         extra_fields.setdefault('is_superuser', False)
-        extra_fields.setdefault('is_active', False)
+        extra_fields.setdefault('is_active', True)
         self_create = self._create_user(email=email, password=password, **extra_fields)
 
-        if self_create.email != None:
-            send_mail(
-                subject=f'Привет! {self_create.email}',
-                message=f'Код для активации аккаунта: {self_create.otp}',
-                from_email='noreply@church.com',
-                recipient_list=[self_create.email,]
-            )
+        # if self_create.email != None:
+        #     send_mail(
+        #         subject=f'Привет! {self_create.email}',
+        #         message=f'Код для активации аккаунта: {self_create.otp}',
+        #         from_email='noreply@church.com',
+        #         recipient_list=[self_create.email,]
+        #     )
             
         return self_create
     

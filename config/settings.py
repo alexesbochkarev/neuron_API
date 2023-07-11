@@ -25,8 +25,9 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
-    'drf_spectacular',
+    'drf_spectacular', # https://drf-spectacular.readthedocs.io/en/latest/
     'corsheaders',
+    'drfpasswordless', # https://github.com/aaronn/django-rest-framework-passwordless
 
     'oauth',
     'apps.core',
@@ -128,6 +129,16 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', 
 }
 
+PASSWORDLESS_AUTH = {
+
+   'PASSWORDLESS_AUTH_TYPES': ['EMAIL',],
+   'PASSWORDLESS_EMAIL_NOREPLY_ADDRESS': 'noreply@example.com',
+   'PASSWORDLESS_EMAIL_SUBJECT' :  "Ваш код для входа" ,
+   'PASSWORDLESS_EMAIL_TOKEN_HTML_TEMPLATE_NAME' : "passwordless_token_email.html",
+   'PASSWORDLESS_EMAIL_VERIFICATION_SUBJECT' :  "Ваш код подтверждения" ,
+   'PASSWORDLESS_EMAIL_VERIFICATION_TOKEN_HTML_TEMPLATE_NAME' :  "passwordless_verification_token_email.html",
+
+}
 
 from .production import *
 from .local import *

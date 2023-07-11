@@ -8,6 +8,17 @@ from apps.projects.models import Project, Post
 User = get_user_model()
 
 
+class UserDetailsSerializer(serializers.ModelSerializer):
+    """
+    User model w/o password
+    """
+
+    class Meta:
+        model = User
+        fields = "__all__"
+        read_only_fields = ('email',)
+
+
 class InterestsSerialazer(serializers.ModelSerializer):
     class Meta:
         model = Interests
@@ -55,11 +66,12 @@ class ProjectSerialazer(serializers.ModelSerializer):
 
 
 class UserSerialazer(serializers.ModelSerializer):
-    interests = InterestsSerialazer(many=True)
-    tariff = TarrifSerialazer()
-    results = ResultSerialazer(many=True)
-    projects = ProjectSerialazer(many=True)
+    interests = InterestsSerialazer(many=True, read_only=True)
+    tariff = TarrifSerialazer(read_only=True)
+    results = ResultSerialazer(many=True, read_only=True)
+    projects = ProjectSerialazer(many=True, read_only=True)
 
     class Meta:
         model = User
         exclude = ('last_login', 'groups', 'is_staff', 'is_active', 'user_permissions', 'otp', 'password', 'is_superuser')
+        read_only_fields = ('tg_id', 'tg_username', 'created', 'energy',)

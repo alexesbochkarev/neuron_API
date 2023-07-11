@@ -5,6 +5,7 @@ Django==4.2
 django-cors-headers==3.14.0
 djangorestframework==3.14.0
 drf-spectacular==0.26.3
+drfpasswordless==1.5.8
 importlib-resources==6.0.0
 inflection==0.5.1
 jsonschema==4.18.0
