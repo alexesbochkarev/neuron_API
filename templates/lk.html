@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello {{ user }}</title>
+</head>
+<body>
+
+<h1>Hi, {{ user.first_name }}!</h1>
+<p>Meta:</p>
+
+<ul>
+    
+    <script type="text/javascript">
+      function onTelegramAuth(user) {
+        alert('Logged in as ' + user.first_name + ' ' + user.last_name + ' (' + user.id + (user.username ? ', @' + user.username : '') + ')');
+      }
+    </script></ul>
+
+</body>
+</html>

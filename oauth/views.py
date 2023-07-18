@@ -4,12 +4,24 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
 from django.contrib.auth import get_user_model
+from django.shortcuts import render
 
 from apps.projects.models import Project, Post
 from . import serialazers
 
 User = get_user_model()
 
+
+def index(request):
+    template = 'login.html'
+    print(request.user)
+    return render(request, template, {'request': request})
+
+
+def profile(request):
+    template = 'lk.html'
+    print(request.user)
+    return render(request, template)
 
 
 class UserViewSet(mixins.ListModelMixin,

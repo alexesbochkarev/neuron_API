@@ -27,6 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     tg_username = models.CharField(_('telegramm name'), max_length=255, blank=True)
     tg_id       = models.CharField(_('telegramm id'), max_length=255, blank=True)
     created     = models.DateTimeField(_("date created"), default=timezone.now)
+    renew_date  = models.DateTimeField(_("renew_date"), auto_now=True)
     dob         = models.DateTimeField(_("date of birthday"), blank=True, null=True)
     otp         = models.CharField(max_length=6, null=True, blank=True)
     energy      = models.PositiveIntegerField(_('Energy'), default=0)
