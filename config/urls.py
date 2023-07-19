@@ -15,7 +15,8 @@ urlpatterns = [
     path('token-auth/', views.obtain_auth_token),
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
     path('swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name='docs'),
-    path('', include('config.routing'))
+    path('', include('config.routing')),
+    path('', include('apps.tariffs.urls'))
 ]
 
 

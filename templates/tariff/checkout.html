@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Buy cool new product</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+  <body>
+    <section>
+      <div>
+        {% if user.is_authenticated %}
+          <form enctype="multipart/form-data" method="post" role="checkout">
+          {% csrf_token %}
+            <h2>Hi {{ user }}! To pay, click on this button <button type="submit" class="btn btn-success" href="{% url 'tariffs:checkout' %}" data-bind-href="pricing">Payment</button></h2>
+          </form>
+        {% else %}
+          <h2>You're not logged in...</h2><a href="{% url 'admin:login' %}" class="btn btn-secondary">Log in</a>
+    
+        {% endif %}
+    </section>
+  </body>
+</html>

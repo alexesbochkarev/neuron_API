@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 
 User = get_user_model()
@@ -43,3 +45,26 @@ class Products(models.Model):
     class Meta:
         verbose_name        = 'Продукт'
         verbose_name_plural = 'Продукты'
+
+    
+class Payment(models.Model):
+    user   = models.ForeignKey(User, on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)
+    date   = models.DateTimeField(auto_now_add=True)
+    tariff = models.ForeignKey(Tariff, on_delete=models.SET_NULL, null=True, blank=True)
+    amount = models.IntegerField(default=0)
+    method = models.CharField(max_length=255, null=True, blank=True)
+    session_id = models.CharField(max_length=500)
+
+    def __str__(self):
+        return f"{self.user}|{self.status}|{self.date}|{self.amount}|{self.method}"
+
+    class Meta:
+        verbose_name        = 'Payment'
+        verbose_name_plural = 'Payments'
+
+
+# @receiver(post_save, sender=User)
+# def create_user_payment(sender, instanse, created, **kwargs):
+#     if created:
+#         Payment.objects.create(user=instanse)
