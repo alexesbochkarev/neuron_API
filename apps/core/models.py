@@ -71,6 +71,7 @@ class Privacy(models.Model):
     public_keys     = models.BooleanField('WEB3 public keys', default=False)
     voice_recording = models.BooleanField('Voice recordings', default=False)
     personal_media  = models.BooleanField('Personal photos/videos', default=False)
+    interests       = models.BooleanField('Interests', default=False)
     user            = models.OneToOneField(User, on_delete=models.CASCADE, related_name="privacy")
 
     class Meta:

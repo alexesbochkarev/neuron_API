@@ -62,9 +62,3 @@ class Payment(models.Model):
     class Meta:
         verbose_name        = 'Payment'
         verbose_name_plural = 'Payments'
-
-
-# @receiver(post_save, sender=User)
-# def create_user_payment(sender, instanse, created, **kwargs):
-#     if created:
-#         Payment.objects.create(user=instanse)

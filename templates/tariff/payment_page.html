@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Buy cool new product</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style type="text/css">
+      .block {
+        width: 250px;
+        display: inline-block;
+      }
+    </style>
+  <body>
+    <section>
+      <div>
+        {% if user.is_authenticated %}
+
+          <h2>Hi {{ user }}! <br>
+
+          <div class="block">
+            <form enctype="multipart/form-data" action="{% url 'tariffs:payment_pack_300' %}" method="post" role="payment_pack_300">
+            {% csrf_token %}
+                <h4>To pay, click<br>
+                    on this button <br>
+                    to purchase an <br>
+                    Energy Pack +300 <br>
+                <button type="submit" class="btn btn-success" data-bind-href="pricing">Payment</button></h4>
+            </form>
+          </div>
+
+          <div class="block">
+            <form enctype="multipart/form-data" action="{% url 'tariffs:payment_pack_800' %}" method="post" role="payment_pack_800">
+              {% csrf_token %}
+                  <h4>To pay, click<br>
+                    on this button <br>
+                    to purchase an <br>
+                    Energy Pack +800 <br>
+                  <button type="submit" class="btn btn-success" data-bind-href="pricing">Payment</button></h4>
+            </form>
+          </div>
+
+          <div class="block">
+            <form enctype="multipart/form-data" action="{% url 'tariffs:payment_pack_2000' %}" method="post" role="payment_pack_2000">
+              {% csrf_token %}
+                  <h4>To pay, click<br>
+                      on this button <br>
+                      to purchase an <br>
+                      Energy Pack +2000 <br>
+                  <button type="submit" class="btn btn-success" data-bind-href="pricing">Payment</button></h4>
+            </form>
+          </div>
+  
+          <div class="block">
+            <form enctype="multipart/form-data" action="{% url 'tariffs:payment_pack_5000' %}" method="post" role="payment_pack_5000">
+              {% csrf_token %}
+                  <h4>To pay, click<br>
+                    on this button <br>
+                    to purchase an <br>
+                    Energy Pack +5000 <br>
+                  <button type="submit" class="btn btn-success" data-bind-href="pricing">Payment</button></h4>
+            </form>
+          </div>
+
+          <div class="block">
+            <form enctype="multipart/form-data" action="{% url 'tariffs:payment_advanced' %}" method="post" role="payment_advanced">
+              {% csrf_token %}
+                  <h4>To pay, click<br>
+                    on this button <br>
+                    to purchase an <br>
+                    subscription Advanced <br>
+                  <button type="submit" class="btn btn-success" data-bind-href="pricing">subscription</button></h4>
+            </form>
+          </div>
+        {% else %}
+
+          <h2>You're not logged in...</h2><a href="{% url 'admin:login' %}" class="btn btn-secondary">Log in</a>
+    
+        {% endif %}
+    </section>
+  </body>
+</html>
