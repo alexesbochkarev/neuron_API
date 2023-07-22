@@ -14,7 +14,7 @@ import time
 User = get_user_model()
 
 
-YOUR_DOMAIN = 'http://127.0.0.1:8000'
+YOUR_DOMAIN = settings.YOUR_DOMAIN
 
 
 @login_required(login_url='admin:login',)
