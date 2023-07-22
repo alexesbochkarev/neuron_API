@@ -19,24 +19,17 @@ YOUR_DOMAIN = 'http://127.0.0.1:8000'
 
 @login_required(login_url='admin:login',)
 def payment_page(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
     try:
         # Retrieve the subscription & product
-        stripe_customer = Tariff.objects.get(user=request.user)
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-        subscription = stripe.Subscription.retrieve(stripe_customer.stripeSubscriptionId)
-        product = stripe.Product.retrieve(subscription.plan.product)
-
-        # Feel free to fetch any additional data from 'subscription' or 'product'
-        # https://stripe.com/docs/api/subscriptions/object
-        # https://stripe.com/docs/api/products/object
+        tariff = Tariff.objects.get(user=request.user)
         return render(request, 'tariff/payment_page.html', {
-            'subscription': subscription,
-            'product': product,
+            'tariff': tariff
         })
 
     except Tariff.DoesNotExist:
         return render(request, 'tariff/payment_page.html')
-
+    return render(request, 'tariff/payment_page.html')
 
 def success(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY

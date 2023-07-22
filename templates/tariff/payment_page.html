@@ -16,8 +16,8 @@
         {% if user.is_authenticated %}
 
           <h2>Hi {{ user }}!</h2>
-          {% if subscription.status == "active" %}
-            <h3>Your subscription: {{ product.name }}</h3>
+          {% if tariff.status == "active" %}
+            <h3>Your subscription: {{ tariff.name }}</h3>
           {% endif %}
 
           <div class="block">
