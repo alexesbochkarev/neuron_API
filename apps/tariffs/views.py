@@ -19,158 +19,23 @@ YOUR_DOMAIN = 'http://127.0.0.1:8000'
 
 @login_required(login_url='admin:login',)
 def payment_page(request):
-    return render(request, 'tariff/payment_page.html')
+    try:
+        # Retrieve the subscription & product
+        stripe_customer = Tariff.objects.get(user=request.user)
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        subscription = stripe.Subscription.retrieve(stripe_customer.stripeSubscriptionId)
+        product = stripe.Product.retrieve(subscription.plan.product)
 
+        # Feel free to fetch any additional data from 'subscription' or 'product'
+        # https://stripe.com/docs/api/subscriptions/object
+        # https://stripe.com/docs/api/products/object
+        return render(request, 'tariff/payment_page.html', {
+            'subscription': subscription,
+            'product': product,
+        })
 
-@login_required(login_url='admin:login',)
-def payment_pack_300(request):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    if request.method == 'POST':
-        try:
-            checkout_session = stripe.checkout.Session.create(
-                line_items=[
-                    {
-                        # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                        'price': 'price_1NVbUlH7qCwTnShMP6wElWTS',
-                        'quantity': 1,
-                    },
-                ],
-                mode='payment',
-                customer_creation = 'always',
-                success_url=YOUR_DOMAIN + '/success?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=YOUR_DOMAIN + '/cancel',
-                metadata={
-                    'energy': 300,
-                    'amount': 9,
-                    'mode':'package'
-                    }
-            )
-            print(checkout_session)
-        except Exception as e:
-            return str(e)
-
-        return redirect(checkout_session.url, code=303)
-
-
-@login_required(login_url='admin:login',)
-def payment_pack_800(request):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    if request.method == 'POST':
-        try:
-            checkout_session = stripe.checkout.Session.create(
-                line_items=[
-                    {
-                        # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                        'price': 'price_1NW0MqH7qCwTnShM72S4bYQL',
-                        'quantity': 1,
-                    },
-                ],
-                mode='payment',
-                customer_creation = 'always',
-                success_url=YOUR_DOMAIN + '/success?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=YOUR_DOMAIN + '/cancel',
-                metadata={
-                    'energy': 800,
-                    'amount': 19,
-                    'mode':'package'
-                    }
-            )
-            print(checkout_session)
-        except Exception as e:
-            return str(e)
-
-        return redirect(checkout_session.url, code=303)
-    
-
-@login_required(login_url='admin:login',)
-def payment_pack_2000(request):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    if request.method == 'POST':
-        try:
-            checkout_session = stripe.checkout.Session.create(
-                line_items=[
-                    {
-                        # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                        'price': 'price_1NW0uNH7qCwTnShMexjr7NKS',
-                        'quantity': 1,
-                    },
-                ],
-                mode='payment',
-                customer_creation = 'always',
-                success_url=YOUR_DOMAIN + '/success?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=YOUR_DOMAIN + '/cancel',
-                metadata={
-                    'energy': 2000,
-                    'amount': 39,
-                    'mode':'package'
-                    }
-            )
-            print(checkout_session)
-        except Exception as e:
-            return str(e)
-
-        return redirect(checkout_session.url, code=303)
-    
-
-@login_required(login_url='admin:login',)
-def payment_pack_5000(request):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    if request.method == 'POST':
-        try:
-            checkout_session = stripe.checkout.Session.create(
-                line_items=[
-                    {
-                        # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                        'price': 'price_1NW15fH7qCwTnShMYWvLHJw4',
-                        'quantity': 1,
-                    },
-                ],
-                mode='payment',
-                customer_creation = 'always',
-                success_url=YOUR_DOMAIN + '/success?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=YOUR_DOMAIN + '/cancel',
-                metadata={
-                    'energy': 5000,
-                    'amount': 79,
-                    'mode':'package'
-                    }
-            )
-            print(checkout_session)
-        except Exception as e:
-            return str(e)
-
-        return redirect(checkout_session.url, code=303)
-    
-
-@login_required(login_url='admin:login',)
-def payment_advanced(request):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    if request.method == 'POST':
-        try:
-            checkout_session = stripe.checkout.Session.create(
-                client_reference_id=request.user.id if request.user.is_authenticated else None,
-                line_items=[
-                    {
-                        # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                        'price': 'price_1NW31RH7qCwTnShMPj5T37vQ',
-                        'quantity': 1,
-                    },
-                ],
-                mode='subscription',
-                success_url=YOUR_DOMAIN + '/success?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=YOUR_DOMAIN + '/cancel',
-                metadata={
-                    'energy': 120,
-                    'amount': 19,
-                    'mode':'subscription',
-                    'tariff': 'Advanced'
-                    }
-            )
-        except Exception as e:
-            return str(e)
-
-        return redirect(checkout_session.url, code=303)
-    
+    except Tariff.DoesNotExist:
+        return render(request, 'tariff/payment_page.html')
 
 
 def success(request):
@@ -191,6 +56,150 @@ def success(request):
 def cancel(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
     return render(request, 'tariff/cancel.html')
+
+
+def payment(price: str, amount: int, mode: str, energy: int = None, request = None):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    try:
+        if mode == 'payment':
+            checkout_session = stripe.checkout.Session.create(
+                line_items=[
+                    {
+                        # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                        'price': price,
+                        'quantity': 1,
+                    },
+                ],
+                mode='payment',
+                customer_creation = 'always',
+                success_url=YOUR_DOMAIN + '/success?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=YOUR_DOMAIN + '/cancel',
+                metadata={
+                    'energy': energy,
+                    'amount': amount,
+                    }
+            )
+        if mode == 'subscription':
+            checkout_session = stripe.checkout.Session.create(
+                client_reference_id=request.user.id if request.user.is_authenticated else None,
+                line_items=[
+                    {
+                        # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+                        'price': price,
+                        'quantity': 1,
+                    },
+                ],
+                mode='subscription',
+                success_url=YOUR_DOMAIN + '/success?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=YOUR_DOMAIN + '/cancel',
+                metadata={
+                    'amount': amount
+                    }
+                
+            )
+    except Exception as e:
+        return str(e)
+    return checkout_session
+
+
+@login_required(login_url='admin:login',)
+def payment_pack_300(request):
+    if request.method == 'POST':
+        session = payment(
+            price='price_1NVbUlH7qCwTnShMP6wElWTS', 
+            energy=300, 
+            amount=9,
+            mode='payment'
+        )
+    return redirect(session.url, code=303)
+
+@login_required(login_url='admin:login',)
+def payment_pack_800(request):
+    if request.method == 'POST':
+        session = payment(
+            price='price_1NW0MqH7qCwTnShM72S4bYQL', 
+            energy=800, 
+            amount=19,
+            mode='payment'
+        )
+    return redirect(session.url, code=303)
+    
+
+@login_required(login_url='admin:login',)
+def payment_pack_2000(request):
+    if request.method == 'POST':
+        session = payment(
+            price='price_1NW0uNH7qCwTnShMexjr7NKS', 
+            energy=2000, 
+            amount=39,
+            mode='payment'
+        )
+    return redirect(session.url, code=303)
+    
+
+@login_required(login_url='admin:login',)
+def payment_pack_5000(request):
+    if request.method == 'POST':
+        session = payment(
+            price='price_1NW15fH7qCwTnShMYWvLHJw4', 
+            energy=5000, 
+            amount=79,
+            mode='payment'
+        )
+    return redirect(session.url, code=303)
+    
+
+@login_required(login_url='admin:login',)
+def payment_free(request):
+    user = User.objects.get(id=request.user.id)
+    if request.method == 'POST':
+        if user.tariff == None:
+            tariff = Tariff.objects.get('Free')
+            user.tariff = tariff
+            user.energy = int(user.energy) + int(tariff.energy_copy)
+            user.save()
+            return redirect('payment_page', code=303)
+    return redirect('/payment_page', code=303)
+            
+    
+@login_required(login_url='admin:login',)
+def payment_advanced(request):
+    if request.method == 'POST':
+        session = payment(
+            request=request,
+            price='price_1NW31RH7qCwTnShMPj5T37vQ',
+            amount=19,
+            mode='subscription'
+        )
+    return redirect(session.url, code=303)
+
+
+@login_required(login_url='admin:login',)
+def payment_ultra(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    if request.method == 'POST':
+        session = payment(
+            request=request,
+            price='price_1NWi6bH7qCwTnShMxvufMNjC',
+            amount=39,
+            mode='subscription'
+        )
+    return redirect(session.url, code=303)
+    
+
+
+@login_required(login_url='admin:login',)
+def payment_proffesional(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    if request.method == 'POST':
+        session = payment(
+            request=request,
+            price='price_1NWiBSH7qCwTnShMWF8iJDcy',
+            amount=99,
+            mode='subscription'
+        )
+    return redirect(session.url, code=303)
+
 
 @csrf_exempt
 def stripe_webhoock(request):
@@ -219,17 +228,38 @@ def stripe_webhoock(request):
         user_payment.save()
         # User update
         user_id = user_payment.user.id
-        energy = event['data']['object']['metadata']['energy']
-        mode = event['data']['object']['metadata']['mode']
         user = User.objects.get(id=user_id)
+        mode = event['data']['object']['mode']
+
         if mode == 'subscription':
-            tariff_name = event['data']['object']['metadata']['tariff']
-            tarif = Tariff.objects.get(name=tariff_name)
+
+            stripe_customer_id = session.get('customer')
+            stripe_subscription_id = session.get('subscription')
+            subscription = stripe.Subscription.retrieve(str(stripe_subscription_id))
+            product = stripe.Product.retrieve(subscription.plan.product)
+            tarif = Tariff.objects.create(
+                name=str(product['metadata']['name']),
+                energy_copy=int(product['metadata']['energy_copy']),
+                refil=int(product['metadata']['refil']),
+                price_month=int(product['metadata']['amount']),
+                price_year=int(product['metadata']['price_year']),
+                economie=int(product['metadata']['economy']),
+                storage=float(product['metadata']['storage']),
+                status=str(subscription['status']),
+                stripeCustomerId=str(stripe_customer_id),
+                stripeSubscriptionId=str(stripe_subscription_id),
+            )
+
             user.tariff = tarif
-            user.energy = int(user.energy) + int(energy)
+            user.energy = int(user.energy) + int(product['metadata']['energy_copy'])
             user.save()
+
         else:
+
+            energy = event['data']['object']['metadata']['energy']
             user.energy = int(user.energy) + int(energy)
             user.save()
+
         
     return HttpResponse(status=200)
+

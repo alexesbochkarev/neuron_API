@@ -17,5 +17,9 @@ urlpatterns = [
     path('payment_pack_800', views.payment_pack_800, name='payment_pack_800'),
     path('payment_pack_2000', views.payment_pack_2000, name='payment_pack_2000'),
     path('payment_pack_5000', views.payment_pack_5000, name='payment_pack_5000'),
-    path('payment_advanced', views.payment_advanced, name='payment_advanced')
+
+    path('payment_free', views.payment_free, name='payment_free'),
+    path('payment_advanced', views.payment_advanced, name='payment_advanced'),
+    path('payment_ultra', views.payment_ultra, name='payment_ultra'),
+    path('payment_proffesional', views.payment_proffesional, name='payment_proffesional'),
 ]

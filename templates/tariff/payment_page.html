@@ -15,7 +15,10 @@
       <div>
         {% if user.is_authenticated %}
 
-          <h2>Hi {{ user }}! <br>
+          <h2>Hi {{ user }}!</h2>
+          {% if subscription.status == "active" %}
+            <h3>Your subscription: {{ product.name }}</h3>
+          {% endif %}
 
           <div class="block">
             <form enctype="multipart/form-data" action="{% url 'tariffs:payment_pack_300' %}" method="post" role="payment_pack_300">
@@ -61,21 +64,58 @@
             </form>
           </div>
 
-          <div class="block">
-            <form enctype="multipart/form-data" action="{% url 'tariffs:payment_advanced' %}" method="post" role="payment_advanced">
-              {% csrf_token %}
-                  <h4>To pay, click<br>
-                    on this button <br>
-                    to purchase an <br>
-                    subscription Advanced <br>
-                  <button type="submit" class="btn btn-success" data-bind-href="pricing">subscription</button></h4>
-            </form>
-          </div>
-        {% else %}
+      </div>
+      <div>
 
-          <h2>You're not logged in...</h2><a href="{% url 'admin:login' %}" class="btn btn-secondary">Log in</a>
-    
+        <div class="block">
+          <form enctype="multipart/form-data" action="{% url 'tariffs:payment_free' %}" method="post" role="payment_free">
+            {% csrf_token %}
+                <h4>To pay, click<br>
+                  on this button <br>
+                  to purchase an <br>
+                  subscription Free <br>
+                <button type="submit" class="btn btn-success" data-bind-href="pricing">subscription</button></h4>
+          </form>
+        </div>
+
+        <div class="block">
+          <form enctype="multipart/form-data" action="{% url 'tariffs:payment_advanced' %}" method="post" role="payment_advanced">
+            {% csrf_token %}
+                <h4>To pay, click<br>
+                  on this button <br>
+                  to purchase an <br>
+                  subscription Advanced <br>
+                <button type="submit" class="btn btn-success" data-bind-href="pricing">subscription</button></h4>
+          </form>
+        </div>
+
+        <div class="block">
+          <form enctype="multipart/form-data" action="{% url 'tariffs:payment_ultra' %}" method="post" role="payment_ultra">
+            {% csrf_token %}
+                <h4>To pay, click<br>
+                  on this button <br>
+                  to purchase an <br>
+                  subscription Ultra <br>
+                <button type="submit" class="btn btn-success" data-bind-href="pricing">subscription</button></h4>
+          </form>
+        </div>
+
+        <div class="block">
+          <form enctype="multipart/form-data" action="{% url 'tariffs:payment_proffesional' %}" method="post" role="payment_proffesional">
+            {% csrf_token %}
+                <h4>To pay, click<br>
+                  on this button <br>
+                  to purchase an <br>
+                  subscription Proffesional <br>
+                <button type="submit" class="btn btn-success" data-bind-href="pricing">subscription</button></h4>
+          </form>
+        </div>
+
+        {% else %}
+        <h2>You're not logged in...</h2><a href="{% url 'admin:login' %}" class="btn btn-secondary">Log in</a>
         {% endif %}
+
+      </div>
     </section>
   </body>
 </html>

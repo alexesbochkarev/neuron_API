@@ -8,6 +8,8 @@
   <section>
     <div>
       <h1>Thanks for your order {{ customer.name }}!</h1>
+      <p>You have successfully subscribed!</p>
+      <p><a href="{% url "tariffs:payment_page" %}">Return to the payment page</a></p>
     </div>
   </section>
 </body>

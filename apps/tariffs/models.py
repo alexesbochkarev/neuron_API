@@ -23,8 +23,10 @@ class Tariff(models.Model):
     price_year  = models.PositiveIntegerField(default=0)
     economie    = models.PositiveIntegerField(default=0)
     storage     = models.FloatField(default=0)
-    status      = models.CharField('Статус', choices=Status.choices, default='Active', max_length=10)
+    status      = models.CharField('Статус', max_length=10)
     products    = models.ManyToManyField("tariffs.Products", related_name="tariffs")
+    stripeCustomerId     = models.CharField(max_length=255)
+    stripeSubscriptionId = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
@@ -48,10 +50,13 @@ class Products(models.Model):
 
     
 class Payment(models.Model):
-    user   = models.ForeignKey(User, on_delete=models.CASCADE)
+    user   = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payment')
     status = models.BooleanField(default=False)
     date   = models.DateTimeField(auto_now_add=True)
-    tariff = models.ForeignKey(Tariff, on_delete=models.SET_NULL, null=True, blank=True)
+    tariff = models.ForeignKey(Tariff, 
+                               on_delete=models.SET_NULL,
+                               null=True, blank=True, 
+                               related_name='payment')
     amount = models.IntegerField(default=0)
     method = models.CharField(max_length=255, null=True, blank=True)
     session_id = models.CharField(max_length=500)
@@ -62,3 +67,4 @@ class Payment(models.Model):
     class Meta:
         verbose_name        = 'Payment'
         verbose_name_plural = 'Payments'
+

@@ -153,3 +153,4 @@ media/
 response.json
 db.sqlite3
 Без имени 1
+apps/strie.json

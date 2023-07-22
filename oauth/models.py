@@ -35,8 +35,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     location    = models.CharField(_('city'), max_length=255, blank=True)
     language    = models.CharField(_('language'), max_length=255, blank=True)
     mainkey     = models.CharField(_('main key'), max_length=255, blank=True)
-    tariff      = models.ForeignKey('tariffs.Tariff', on_delete=models.SET_NULL, 
-                                    related_name='users', null=True, blank=True)
+    tariff      = models.OneToOneField(
+                                    'tariffs.Tariff', 
+                                    on_delete=models.SET_NULL, 
+                                    related_name='user', 
+                                    null=True, blank=True)
     avatar      = models.ImageField(
                                 upload_to=user_directory_path, 
                                 height_field=None,
