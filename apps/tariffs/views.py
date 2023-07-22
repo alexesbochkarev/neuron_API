@@ -158,7 +158,7 @@ def payment_free(request):
             user.tariff = tariff
             user.energy = int(user.energy) + int(tariff.energy_copy)
             user.save()
-            return redirect('payment_page', code=303)
+            return redirect('/payment_page', code=303)
     return redirect('/payment_page', code=303)
             
     
