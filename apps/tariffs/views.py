@@ -154,7 +154,7 @@ def payment_free(request):
     user = User.objects.get(id=request.user.id)
     if request.method == 'POST':
         if user.tariff == None:
-            tariff = Tariff.objects.get('Free')
+            tariff = Tariff.objects.get(name='Free')
             user.tariff = tariff
             user.energy = int(user.energy) + int(tariff.energy_copy)
             user.save()
